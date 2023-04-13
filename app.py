@@ -1,17 +1,15 @@
 import os
 
-os.environ['SPOTIPY_REDIRECT_URI'] = 'http://127.0.0.1:5000/callback'
-
 from flask import Flask, render_template, request, redirect, url_for, session
 from spotify_playlist import create_top_songs_playlist, sp_oauth
 
 app = Flask(__name__)
 app.secret_key = 'de14262590575e6e9db54028fbc450e7'
 
-@app.route('/')
+@app.route("/")
 def index():
     auth_url = sp_oauth.get_authorize_url()
-    return render_template('index.html', auth_url=auth_url)
+    return render_template("index.html", auth_url=auth_url)
 
 @app.route('/callback/', methods=['GET', 'POST'])
 def callback():
@@ -20,6 +18,8 @@ def callback():
     if code is None:
         return redirect(url_for('index'))
     token_info = sp_oauth.get_access_token(code)
+    access_token = token_info['access_token']
+    sp = spotipy.Spotify(auth=access_token)
     session['access_token'] = token_info['access_token']
     return redirect(url_for('create_playlist'))
 
