@@ -1,8 +1,3 @@
-import logging
-from logging.handlers import RotatingFileHandler
-
-logging.basicConfig(filename='errors.log', level=logging.ERROR)
-
 import os
 
 from flask import Flask, render_template, request, redirect, url_for, session
@@ -18,18 +13,14 @@ def index():
 
 @app.route('/callback/', methods=['GET', 'POST'])
 def callback():
-    try:
-        print("Callback function called")  # Keep this line
-        code = request.args.get('code')
-        if code is None:
-            return redirect(url_for('index'))
-        token_info = sp_oauth.get_access_token(code)
-        access_token = token_info['access_token']
-        session['access_token'] = token_info['access_token']
-        return redirect(url_for('create_playlist'))
-    except Exception as e:
-        logging.error("Error in /callback route: %s", e)
-        return "An error occurred, please check the logs.", 500
+    print("Callback function called")  # Keep this line
+    code = request.args.get('code')
+    if code is None:
+        return redirect(url_for('index'))
+    token_info = sp_oauth.get_access_token(code)
+    access_token = token_info['access_token']
+    session['access_token'] = token_info['access_token']
+    return redirect(url_for('create_playlist'))
 
 @app.route('/create_playlist', methods=['GET', 'POST'])
 def create_playlist():
