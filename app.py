@@ -1,5 +1,7 @@
 import os
-
+import logging
+import spotipy
+from logging.handlers import RotatingFileHandler
 from flask import Flask, render_template, request, redirect, url_for, session
 from spotify_playlist import create_top_songs_playlist, sp_oauth
 
