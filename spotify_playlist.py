@@ -14,7 +14,7 @@ sp_oauth = spotipy.SpotifyOAuth(
     show_dialog=True
 )
 
-def create_top_songs_playlist(access_token):
+def create_top_songs_playlist(user_id, access_token):
     sp = spotipy.Spotify(auth=access_token)
 
     top_tracks = sp.current_user_top_tracks(limit=5, time_range='long_term')
@@ -23,9 +23,9 @@ def create_top_songs_playlist(access_token):
     recommendations = sp.recommendations(seed_tracks=track_ids, limit=10)
 
     playlist_name = "Test Playlist"
-    new_playlist = sp.user_playlist_create(sp.current_user()['id'], playlist_name)
+    new_playlist = sp.user_playlist_create(user_id, playlist_name)
 
     playlist_id = new_playlist['id']
-    sp.user_playlist_add_tracks(sp.current_user()['id'], playlist_id, [track['id'] for track in recommendations['tracks']])
+    sp.user_playlist_add_tracks(user_id, playlist_id, [track['id'] for track in recommendations['tracks']])
 
     return playlist_name

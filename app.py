@@ -28,11 +28,14 @@ def create_playlist():
         return redirect(url_for('index'))
 
     access_token = session['access_token']
+    sp = spotipy.Spotify(auth=access_token)
+    user_id = sp.current_user()['id']
 
     # Implement payment processing here
 
-    playlist_name = create_top_songs_playlist(access_token)
+    playlist_name = create_top_songs_playlist(user_id, access_token)
     return render_template('success.html', playlist_name=playlist_name)
+
 
 @app.route('/success')
 def success():
