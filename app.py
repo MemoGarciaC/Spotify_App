@@ -19,7 +19,6 @@ def callback():
         return redirect(url_for('index'))
     token_info = sp_oauth.get_access_token(code)
     access_token = token_info['access_token']
-    sp = spotipy.Spotify(auth=access_token)
     session['access_token'] = token_info['access_token']
     return redirect(url_for('create_playlist'))
 
