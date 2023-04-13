@@ -6,7 +6,7 @@ CLIENT_ID = 'fba9c64e3fd7465699d57c02c746fe88'
 CLIENT_SECRET = '6b6601dfbaa54706b64f89fa82f55130'
 REDIRECT_URI = os.environ.get("REDIRECT_URI", "http://localhost:5000/callback/")
 
-sp_oauth = SpotifyOAuth(
+sp_oauth = spotipy.SpotifyOAuth(
     client_id=CLIENT_ID,
     client_secret=CLIENT_SECRET,
     redirect_uri=REDIRECT_URI,
