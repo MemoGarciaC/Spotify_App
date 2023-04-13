@@ -13,20 +13,16 @@ def create_top_songs_playlist(access_token):
         redirect_uri=REDIRECT_URI,
         scope="user-top-read playlist-modify-public",
         show_dialog=True,
-        token_info={"access_token": access_token}
+        token_info={"access_token": access_token}  # Add this line to provide the user's access token
     )
     sp = spotipy.Spotify(auth_manager=sp_oauth)
 
     top_tracks = sp.current_user_top_tracks(limit=5, time_range='long_term')
-
-    if 'items' not in top_tracks:
-        raise ValueError("The expected 'items' key is not present in the top_tracks dictionary.")
-
     track_ids = [track['id'] for track in top_tracks['items']]
 
     recommendations = sp.recommendations(seed_tracks=track_ids, limit=10)
 
-    playlist_name = "Playlist de Prueba"
+    playlist_name = "Test Playlist"
     new_playlist = sp.user_playlist_create(sp.current_user()['id'], playlist_name)
 
     playlist_id = new_playlist['id']
