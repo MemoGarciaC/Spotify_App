@@ -18,6 +18,10 @@ def create_top_songs_playlist(access_token):
     sp = spotipy.Spotify(auth_manager=sp_oauth)
 
     top_tracks = sp.current_user_top_tracks(limit=5, time_range='long_term')
+
+    if 'items' not in top_tracks:
+        raise ValueError("The expected 'items' key is not present in the top_tracks dictionary.")
+
     track_ids = [track['id'] for track in top_tracks['items']]
 
     recommendations = sp.recommendations(seed_tracks=track_ids, limit=10)
