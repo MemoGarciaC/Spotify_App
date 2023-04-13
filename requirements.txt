@@ -47,7 +47,6 @@ proto-plus==1.22.2
 protobuf==4.22.1
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
-pyobjc==9.0.1
 pyobjc-core==9.0.1
 pyobjc-framework-Accessibility==9.0.1
 pyobjc-framework-Accounts==9.0.1
