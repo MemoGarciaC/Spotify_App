@@ -7,13 +7,14 @@ CLIENT_SECRET = '6b6601dfbaa54706b64f89fa82f55130'
 REDIRECT_URI = os.environ.get("REDIRECT_URI", "http://localhost:5000/callback/")
 
 def create_top_songs_playlist(access_token):
+    from spotipy.oauth2 import SpotifyOAuth # import SpotifyOAuth here
     sp_oauth = SpotifyOAuth(
         client_id=CLIENT_ID,
         client_secret=CLIENT_SECRET,
         redirect_uri=REDIRECT_URI,
         scope="user-top-read playlist-modify-public",
         show_dialog=True,
-        token_info={"access_token": access_token}  # Add this line to provide the user's access token
+        token_info={"access_token": access_token}
     )
     sp = spotipy.Spotify(auth_manager=sp_oauth)
 
