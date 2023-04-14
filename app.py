@@ -1,6 +1,7 @@
 import os
 import logging
 import spotipy
+import uuid
 from spotipy.oauth2 import SpotifyOAuth
 from logging.handlers import RotatingFileHandler
 from flask import Flask, render_template, request, redirect, url_for, session
@@ -13,16 +14,17 @@ CLIENT_ID = 'fba9c64e3fd7465699d57c02c746fe88'
 CLIENT_SECRET = '6b6601dfbaa54706b64f89fa82f55130'
 REDIRECT_URI = os.environ.get("REDIRECT_URI", "http://localhost:5000/callback/")
 
-sp_oauth = spotipy.SpotifyOAuth(
-    client_id=CLIENT_ID,
-    client_secret=CLIENT_SECRET,
-    redirect_uri=REDIRECT_URI,
-    scope="user-top-read playlist-modify-public",
-    show_dialog=True
-)
-
 @app.route("/")
 def index():
+    cache_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), f".cache-{str(uuid.uuid4())}")
+    sp_oauth = spotipy.SpotifyOAuth(
+        client_id=CLIENT_ID,
+        client_secret=CLIENT_SECRET,
+        redirect_uri=REDIRECT_URI,
+        scope="user-top-read playlist-modify-public",
+        show_dialog=True,
+        cache_path=cache_path
+    )
     auth_url = sp_oauth.get_authorize_url()
     return render_template("index.html", auth_url=auth_url)
 
