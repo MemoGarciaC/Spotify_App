@@ -5,6 +5,7 @@ import uuid
 from spotipy.oauth2 import SpotifyOAuth
 from logging.handlers import RotatingFileHandler
 from flask import Flask, render_template, request, redirect, url_for, session
+import pickle
 from spotify_playlist import create_top_songs_playlist
 
 app = Flask(__name__)
@@ -25,6 +26,7 @@ def index():
         show_dialog=True,
         cache_path=cache_path
     )
+    session['sp_oauth'] = pickle.dumps(sp_oauth)
     auth_url = sp_oauth.get_authorize_url()
     return render_template("index.html", auth_url=auth_url)
 
@@ -34,6 +36,8 @@ def callback():
     code = request.args.get('code')
     if code is None:
         return redirect(url_for('index'))
+    
+    sp_oauth = pickle.loads(session['sp_oauth'])
     token_info = sp_oauth.get_access_token(code)
     access_token = token_info['access_token']
     session['access_token'] = token_info['access_token']
