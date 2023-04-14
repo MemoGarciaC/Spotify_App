@@ -1,16 +1,16 @@
-import os
+# spotify_playlist.py
 import spotipy
 
 def create_top_songs_playlist(user_id, sp):
-    top_tracks = sp.current_user_top_tracks(limit=5, time_range='long_term')
-    track_ids = [track['id'] for track in top_tracks['items']]
+    # Your logic to fetch top songs or tracks for the authenticated user
 
-    recommendations = sp.recommendations(seed_tracks=track_ids, limit=50, market='US')
+    # Example playlist name
+    playlist_name = "My Top Songs"
 
-    playlist_name = "Prueba 1.4"
-    new_playlist = sp.user_playlist_create(user_id, playlist_name)
+    # Create a new playlist for the authenticated user
+    new_playlist = sp.user_playlist_create(user_id, playlist_name, public=True, description='A playlist of top songs.')
 
-    playlist_id = new_playlist['id']
-    sp.user_playlist_add_tracks(user_id, playlist_id, [track['id'] for track in recommendations['tracks']])
+    # Add tracks to the new playlist (replace `tracks` with your list of track IDs)
+    sp.user_playlist_add_tracks(user_id, new_playlist['id'], tracks)
 
     return playlist_name
