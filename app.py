@@ -1,12 +1,25 @@
 import os
 import logging
 import spotipy
+from spotipy.oauth2 import SpotifyOAuth
 from logging.handlers import RotatingFileHandler
 from flask import Flask, render_template, request, redirect, url_for, session
-from spotify_playlist import create_top_songs_playlist, sp_oauth
+from spotify_playlist import create_top_songs_playlist
 
 app = Flask(__name__)
 app.secret_key = 'de14262590575e6e9db54028fbc450e7'
+
+CLIENT_ID = 'fba9c64e3fd7465699d57c02c746fe88'
+CLIENT_SECRET = '6b6601dfbaa54706b64f89fa82f55130'
+REDIRECT_URI = os.environ.get("REDIRECT_URI", "http://localhost:5000/callback/")
+
+sp_oauth = spotipy.SpotifyOAuth(
+    client_id=CLIENT_ID,
+    client_secret=CLIENT_SECRET,
+    redirect_uri=REDIRECT_URI,
+    scope="user-top-read playlist-modify-public",
+    show_dialog=True
+)
 
 @app.route("/")
 def index():
@@ -38,11 +51,12 @@ def create_playlist():
     access_token = session['access_token']
     user_id = session['user_id']
 
+    sp = spotipy.Spotify(auth=access_token)
+
     # Implement payment processing here
 
-    playlist_name = create_top_songs_playlist(user_id, access_token)
+    playlist_name = create_top_songs_playlist(user_id, sp)
     return render_template('success.html', playlist_name=playlist_name)
-
 
 @app.route('/success')
 def success():
