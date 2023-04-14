@@ -8,7 +8,7 @@ def create_top_songs_playlist(user_id, sp):
     track_ids = [track['id'] for track in top_tracks['items']]
 
     # Fetch recommendations based on the user's top tracks
-    recommendations = sp.recommendations(seed_tracks=track_ids, limit=20)
+    recommendations = sp.recommendations(seed_tracks=track_ids[:5], limit=20)
 
     # Extract track IDs from the recommendations
     recommended_track_ids = [track['id'] for track in recommendations['tracks']]
