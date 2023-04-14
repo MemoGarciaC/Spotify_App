@@ -22,16 +22,21 @@ def callback():
     token_info = sp_oauth.get_access_token(code)
     access_token = token_info['access_token']
     session['access_token'] = token_info['access_token']
+
+    # Store the user's ID in the session
+    sp = spotipy.Spotify(auth=access_token)
+    user_id = sp.current_user()['id']
+    session['user_id'] = user_id
+
     return redirect(url_for('create_playlist'))
 
 @app.route('/create_playlist', methods=['GET', 'POST'])
 def create_playlist():
-    if 'access_token' not in session:
+    if 'access_token' not in session or 'user_id' not in session:
         return redirect(url_for('index'))
 
     access_token = session['access_token']
-    sp = spotipy.Spotify(auth=access_token)
-    user_id = sp.current_user()['id']
+    user_id = session['user_id']
 
     # Implement payment processing here
 
