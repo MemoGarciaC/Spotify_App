@@ -39,17 +39,15 @@ def callback():
     # Store the user's ID in the session
     sp = spotipy.Spotify(auth=access_token)
     user_id = sp.current_user()['id']
-    session['user_id'] = user_id
 
-    return redirect(url_for('create_playlist'))
+    return redirect(url_for('create_playlist', user_id=user_id))
 
-@app.route('/create_playlist', methods=['GET', 'POST'])
-def create_playlist():
-    if 'access_token' not in session or 'user_id' not in session:
+@app.route('/create_playlist/<user_id>', methods=['GET', 'POST'])
+def create_playlist(user_id):
+    if 'access_token' not in session:
         return redirect(url_for('index'))
 
     access_token = session['access_token']
-    user_id = session['user_id']
 
     sp = spotipy.Spotify(auth=access_token)
 
