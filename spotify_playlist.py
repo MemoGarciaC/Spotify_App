@@ -7,7 +7,7 @@ def create_top_songs_playlist(user_id, sp):
 
     recommendations = sp.recommendations(seed_tracks=track_ids, limit=50)
 
-    playlist_name = "Un Montoncito"
+    playlist_name = "Prueba 1.1"
     new_playlist = sp.user_playlist_create(user_id, playlist_name)
 
     playlist_id = new_playlist['id']
