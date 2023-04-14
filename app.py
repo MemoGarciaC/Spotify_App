@@ -1,6 +1,6 @@
 import os
 import spotipy
-import json  # Add this import
+import pickle  # Replace json import with pickle
 from spotipy.oauth2 import SpotifyOAuth
 from flask import Flask, render_template, request, redirect, url_for, session
 from spotify_playlist import create_top_songs_playlist
@@ -21,7 +21,7 @@ def index():
         scope="user-top-read playlist-modify-public",
         show_dialog=True,
     )
-    session['sp_oauth'] = sp_oauth.to_json()  # Serialize the sp_oauth object
+    session['sp_oauth'] = pickle.dumps(sp_oauth)  # Serialize the sp_oauth object using pickle
     auth_url = sp_oauth.get_authorize_url()
     return render_template("index.html", auth_url=auth_url)
 
@@ -32,7 +32,7 @@ def callback():
     if code is None:
         return redirect(url_for('index'))
     
-    sp_oauth = SpotifyOAuth.from_json(session['sp_oauth'])  # Deserialize the sp_oauth object
+    sp_oauth = pickle.loads(session['sp_oauth'])  # Deserialize the sp_oauth object using pickle
     token_info = sp_oauth.get_access_token(code)
     session['access_token'] = token_info['access_token']  # Store only the access_token in the session
 
