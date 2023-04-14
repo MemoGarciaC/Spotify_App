@@ -54,8 +54,8 @@ def create_playlist(user_id):
 
     # Implement payment processing here
 
-    playlist_name = create_top_songs_playlist
-    return render_template('success.html', playlist_name=playlist_name)
+    playlist_name = create_top_songs_playlist(user_id, sp)  # Make sure to call the function with the arguments
+    return render_template('success.html', playlist_name=playlist_name)  # Pass the playlist_name to the template
 
 @app.route('/success')
 def success():
