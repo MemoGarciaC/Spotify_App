@@ -1,6 +1,8 @@
 import spotipy
 
-def create_top_songs_playlist(user_id, sp):
+def create_top_songs_playlist(user_id, access_token):
+    sp = spotipy.Spotify(auth=access_token)
+
     # Fetch the user's top tracks
     top_tracks = sp.current_user_top_tracks(limit=20, time_range='medium_term')
 
