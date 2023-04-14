@@ -32,12 +32,14 @@ def callback():
     if code is None:
         return redirect(url_for('index'))
     
-    sp_oauth = pickle.loads(session['sp_oauth'])  # Deserialize the sp_oauth object using pickle
+    sp_oauth = pickle.loads(session['sp_oauth'])
     token_info = sp_oauth.get_access_token(code)
-    session['access_token'] = token_info['access_token']  # Store only the access_token in the session
+    session['access_token'] = token_info['access_token']
+
+    # Create the sp object here
+    sp = spotipy.Spotify(auth=session['access_token'])
 
     # Store the user's ID in the session
-    sp = spotipy.Spotify(auth=session['access_token'])
     user_id = sp.current_user()['id']
 
     return redirect(url_for('create_playlist', user_id=user_id))
@@ -48,8 +50,7 @@ def create_playlist(user_id):
         return redirect(url_for('index'))
 
     access_token = session['access_token']
-
-    sp = spotipy.Spotify(auth=access_token)
+    sp = spotipy.Spotify(auth=access_token)  # Create the sp object here
 
     # Implement payment processing here
 
