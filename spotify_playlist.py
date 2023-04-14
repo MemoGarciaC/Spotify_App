@@ -1,9 +1,6 @@
 import spotipy
 
-def create_top_songs_playlist(user_id, access_token):
-    sp = spotipy.Spotify(auth=access_token)
-
-    # Fetch the user's top tracks
+def create_top_songs_playlist(user_id, sp):
     top_tracks = sp.current_user_top_tracks(limit=20, time_range='medium_term')
 
     # Extract track IDs from the top tracks
@@ -22,6 +19,6 @@ def create_top_songs_playlist(user_id, access_token):
     new_playlist = sp.user_playlist_create(user_id, playlist_name, public=True, description='A playlist of recommended songs based on your top tracks.')
 
     # Add tracks to the new playlist
-    sp.user_playlist_add_tracks(user_id, new_playlist['id'], recommended_track_ids)
+    sp.playlist_add_items(new_playlist['id'], recommended_track_ids)
 
     return playlist_name

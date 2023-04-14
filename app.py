@@ -25,7 +25,7 @@ def index():
     auth_url = sp_oauth.get_authorize_url()
     return render_template("index.html", auth_url=auth_url)
 
-@app.route('/callback/', methods=['GET', 'POST'])
+@app.route('/callback/')
 def callback():
     print("Callback function called")  # Keep this line
     code = request.args.get('code')
@@ -54,7 +54,7 @@ def create_playlist(user_id):
 
     # Implement payment processing here
 
-    playlist_name = create_top_songs_playlist(user_id, sp)
+    playlist_name = create_top_songs_playlist
     return render_template('success.html', playlist_name=playlist_name)
 
 @app.route('/success')
