@@ -1,5 +1,6 @@
 import os
 import spotipy
+import json  # Add this import
 from spotipy.oauth2 import SpotifyOAuth
 from flask import Flask, render_template, request, redirect, url_for, session
 from spotify_playlist import create_top_songs_playlist
@@ -20,7 +21,7 @@ def index():
         scope="user-top-read playlist-modify-public",
         show_dialog=True,
     )
-    session['sp_oauth'] = sp_oauth
+    session['sp_oauth'] = sp_oauth.to_json()  # Serialize the sp_oauth object
     auth_url = sp_oauth.get_authorize_url()
     return render_template("index.html", auth_url=auth_url)
 
@@ -31,13 +32,12 @@ def callback():
     if code is None:
         return redirect(url_for('index'))
     
-    sp_oauth = session['sp_oauth']
+    sp_oauth = SpotifyOAuth.from_json(session['sp_oauth'])  # Deserialize the sp_oauth object
     token_info = sp_oauth.get_access_token(code)
-    access_token = token_info['access_token']
-    session['access_token'] = token_info['access_token']
+    session['access_token'] = token_info['access_token']  # Store only the access_token in the session
 
     # Store the user's ID in the session
-    sp = spotipy.Spotify(auth=access_token)
+    sp = spotipy.Spotify(auth=session['access_token'])
     user_id = sp.current_user()['id']
 
     return redirect(url_for('create_playlist', user_id=user_id))
